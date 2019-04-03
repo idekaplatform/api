@@ -1,0 +1,45 @@
+server {
+  listen 80;
+  listen [::]:80;
+
+  server_name release.api.ideka.fr;
+
+  return 302 https://$server_name$request_uri;
+}
+
+server {
+  listen 443 ssl http2;
+  listen [::]:443 ssl http2;
+
+  ssl_certificate /etc/letsencrypt/live/release.api.ideka.fr/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/release.api.ideka.fr/privkey.pem;
+
+  server_name release.api.ideka.fr;
+
+  access_log /var/log/nginx/ideka.access.log;
+  error_log /var/log/nginx/ideka.error.log;
+
+  merge_slashes on;
+
+  root /srv/app/public;
+
+  location / {
+      # try to serve file directly, fallback to app.php
+      try_files $uri /index.php$is_args$args;
+  }
+
+  location ~ ^/index\.php(/|$) {
+      fastcgi_pass ideka_api:9000;
+      fastcgi_split_path_info ^(.+\.php)(/.*)$;
+      include fastcgi_params;
+      fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+      fastcgi_param DOCUMENT_ROOT $realpath_root;
+      internal;
+  }
+
+  # return 404 for all other php files not matching the front controller
+  # this prevents access to other php files you don't want to be accessible.
+  location ~ \.php$ {
+      return 404;
+  }
+}

@@ -1,0 +1,55 @@
+---
+version: "3.5"
+networks:
+    api:
+        name: ideka_api
+        driver: bridge
+
+services:
+    api:
+        container_name: ideka_api
+        build: docker/phpfpm
+        working_dir: /srv/app
+        env_file: ideka.env
+        volumes:
+            - ".:/srv/app"
+        networks:
+            - api
+
+    redis:
+        container_name: ideka_api_redis
+        image: redis
+        env_file: ideka.env
+        volumes:
+            - "./var/redis:/data"
+        networks:
+            - api
+
+    mysql:
+        container_name: ideka_api_mysql
+        image: mysql:5.7
+        env_file: ideka.env
+        networks:
+            - api
+        volumes:
+            - "./var/mysql:/var/lib/mysql"
+
+    nginx:
+        container_name: ideka_api_nginx
+        build: docker/nginx
+        depends_on:
+            - api
+        env_file: ideka.env
+        extra_hosts:
+            - "local.ideka.fr:127.0.0.1"
+            - "release.ideka.fr:127.0.0.1"
+            - "www.ideka.fr:127.0.0.1"
+        volumes:
+            - ".:/srv/app"
+            - "./var/ssl:/etc/letsencrypt"
+            - "./var/log/nginx:/var/log/nginx"
+        networks:
+            - api
+        ports:
+            - "${NGINX_TLS_PORT}:443"
+            - "${NGINX_PORT}:80"
