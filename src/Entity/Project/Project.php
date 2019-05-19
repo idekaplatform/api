@@ -4,6 +4,7 @@ namespace App\Entity\Project;
 
 use App\Entity\PublishableInterface;
 use App\Entity\SocialNetwork;
+use App\Entity\Organization\Organization;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -49,7 +50,7 @@ class Project implements \JsonSerializable, PublishableInterface
      */
     protected $websiteUrl;
     /**
-     * @ORM\OneToMany(targetEntity="SocialNetwork", mappedBy="project")
+     * @ORM\OneToMany(targetEntity="SocialNetwork", mappedBy="project", cascade={"persist", "remove"})
      */
     protected $socialNetworks;
     /**

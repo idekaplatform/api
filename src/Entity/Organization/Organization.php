@@ -40,11 +40,11 @@ class Organization implements \JsonSerializable
      */
     protected $websiteUrl;
     /**
-     * @ORM\OneToMany(targetEntity="Member", mappedBy="organization", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="Member", mappedBy="organization", cascade={"persist", "remove"})
      */
     protected $members;
     /**
-     * @ORM\OneToMany(targetEntity="SocialNetwork", mappedBy="organization", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="SocialNetwork", mappedBy="organization", cascade={"persist", "remove"})
      */
     protected $socialNetworks;
     /**

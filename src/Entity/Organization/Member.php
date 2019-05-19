@@ -27,6 +27,9 @@ class Member implements \JsonSerializable
      */
     protected $joinedAt;
 
+    /**
+     * @ORM\PrePersist()
+     */
     public function prePersist()
     {
         $this->joinedAt = new \DateTime();
