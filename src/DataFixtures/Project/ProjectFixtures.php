@@ -30,7 +30,8 @@ class ProjectFixtures extends Fixture implements DependentFixtureInterface
 
     protected function getProjects()
     {
-        yield (new Project())
+        $project = new Project();
+        yield $project
             ->setId(1)
             ->setName('Ideka')
             ->setSlug('ideka')
@@ -42,6 +43,7 @@ class ProjectFixtures extends Fixture implements DependentFixtureInterface
                 (new SocialNetwork())
                 ->setUrl('https://gitlab.com/idekaplatform/')
                 ->setNetwork(SocialNetwork::NETWORK_GITLAB)
+                ->setProject($project)
             )
         ;
     }

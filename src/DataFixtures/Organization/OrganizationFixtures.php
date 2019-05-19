@@ -42,16 +42,19 @@ class OrganizationFixtures extends Fixture implements DependentFixtureInterface
                 (new SocialNetwork())
                 ->setUrl('https://www.facebook.com/NewTalentsFrance')
                 ->setNetwork(SocialNetwork::NETWORK_FACEBOOK)
+                ->setOrganization($organization)
             )
             ->addSocialNetwork(
                 (new SocialNetwork())
                 ->setUrl('https://twitter.com/NewTalentsFR')
                 ->setNetwork(SocialNetwork::NETWORK_TWITTER)
+                ->setOrganization($organization)
             )
             ->addSocialNetwork(
                 (new SocialNetwork())
                 ->setUrl('https://discord.gg/sFew2ek')
                 ->setNetwork(SocialNetwork::NETWORK_DISCORD)
+                ->setOrganization($organization)
             )
             ->addMember(
                 (new Member())

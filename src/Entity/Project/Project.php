@@ -256,7 +256,7 @@ class Project implements \JsonSerializable, PublishableInterface
             'user' => $this->user,
             'organization' => $this->organization,
             'website_url' => $this->websiteUrl,
-            'social_networks' => $this->socialNetworks,
+            'social_networks' => $this->socialNetworks->toArray(),
             'is_published' => $this->isPublished,
             'created_at' => $this->createdAt,
             'updated_at' => $this->updatedAt

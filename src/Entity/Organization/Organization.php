@@ -221,7 +221,7 @@ class Organization implements \JsonSerializable
             'short_description' => $this->shortDescription,
             'description' => $this->description,
             'members' => $this->members,
-            'social_networks' => $this->socialNetworks,
+            'social_networks' => $this->getSocialNetworks()->toArray(),
             'created_at' => $this->createdAt,
             'updated_at' => $this->updatedAt,
         ];
