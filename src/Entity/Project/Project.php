@@ -258,8 +258,8 @@ class Project implements \JsonSerializable, PublishableInterface
             'website_url' => $this->websiteUrl,
             'social_networks' => $this->socialNetworks->toArray(),
             'is_published' => $this->isPublished,
-            'created_at' => $this->createdAt,
-            'updated_at' => $this->updatedAt
+            'created_at' => $this->createdAt->format('c'),
+            'updated_at' => $this->updatedAt->format('c')
         ];
     }
 }

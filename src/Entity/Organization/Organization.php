@@ -222,8 +222,8 @@ class Organization implements \JsonSerializable
             'description' => $this->description,
             'members' => $this->members,
             'social_networks' => $this->getSocialNetworks()->toArray(),
-            'created_at' => $this->createdAt,
-            'updated_at' => $this->updatedAt,
+            'created_at' => $this->createdAt->format('c'),
+            'updated_at' => $this->updatedAt->format('c'),
         ];
     }
 }

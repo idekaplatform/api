@@ -64,7 +64,7 @@ class Member implements \JsonSerializable
         return [
             'organization' => $this->organization,
             'user' => $this->user,
-            'joined_at' => $this->joinedAt
+            'joined_at' => $this->joinedAt->format('c')
         ];
     }
 }
