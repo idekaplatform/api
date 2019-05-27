@@ -42,7 +42,7 @@ services:
         env_file: ideka.env
         extra_hosts:
             - "local.ideka.fr:127.0.0.1"
-            - "release.ideka.fr:127.0.0.1"
+            - "ideka.new-talents.fr:127.0.0.1"
             - "www.ideka.fr:127.0.0.1"
         volumes:
             - ".:/srv/app"

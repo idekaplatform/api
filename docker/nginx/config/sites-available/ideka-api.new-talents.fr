@@ -2,7 +2,7 @@ server {
   listen 80;
   listen [::]:80;
 
-  server_name ideka.api.new-talents.fr;
+  server_name ideka-api.new-talents.fr;
 
   return 302 https://$server_name$request_uri;
 }
@@ -11,10 +11,10 @@ server {
   listen 443 ssl http2;
   listen [::]:443 ssl http2;
 
-  ssl_certificate /etc/letsencrypt/live/ideka.api.new-talents.fr/fullchain.pem;
-  ssl_certificate_key /etc/letsencrypt/live/ideka.api.new-talents.fr/privkey.pem;
+  ssl_certificate /etc/letsencrypt/live/ideka-api.new-talents.fr/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/ideka-api.new-talents.fr/privkey.pem;
 
-  server_name ideka.api.new-talents.fr;
+  server_name ideka-api.new-talents.fr;
 
   access_log /var/log/nginx/ideka.access.log;
   error_log /var/log/nginx/ideka.error.log;
