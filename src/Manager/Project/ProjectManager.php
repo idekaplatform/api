@@ -8,17 +8,22 @@ use App\Entity\User\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use App\Utils\Slugger;
+use App\Manager\Organization\OrganizationManager;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ProjectManager
 {
     /** @var EntityManagerInterface */
     protected $em;
+    /** @var OrganizationManager */
+    protected $organizationManager;
     /** @var Slugger */
     protected $slugger;
 
-    public function __construct(EntityManagerInterface $em, Slugger $slugger)
+    public function __construct(EntityManagerInterface $em, OrganizationManager $organizationManager, Slugger $slugger)
     {
         $this->em = $em;
+        $this->organizationManager = $organizationManager;
         $this->slugger = $slugger;
     }
 
@@ -49,8 +54,8 @@ class ProjectManager
         if ($this->get($project->getSlug()) !== null) {
             throw new BadRequestHttpException('projects.name_already_taken');
         }
-        if (!empty($data['organization_id'])) {
-            if (($organization = $this->organizationManager->get($data['organization_id'])) === null) {
+        if (!empty($data['organization_slug'])) {
+            if (($organization = $this->organizationManager->get($data['organization_slug'])) === null) {
                 throw new NotFoundHttpException('organizations.not_found');
             }
             $project->setOrganization($organization);
