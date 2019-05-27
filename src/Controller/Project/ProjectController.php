@@ -47,6 +47,8 @@ class ProjectController extends AbstractController
      */
     public function createProject(Request $request, ProjectManager $projectManager)
     {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
         return new JsonResponse($projectManager->create($request->request->all(), $this->getUser()), 201);
     }
 }

@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Manager\User\UserManager;
 use App\Manager\Organization\OrganizationManager;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\Request;
 
 class OrganizationController extends AbstractController
 {
@@ -31,5 +32,15 @@ class OrganizationController extends AbstractController
             throw new NotFoundHttpException('organizations.not_found');
         }
         return new JsonResponse($organization);
+    }
+
+    /**
+     * @Route("/api/organizations", name="create_organization", methods={"POST"})
+     */
+    public function createOrganization(Request $request, OrganizationManager $organizationManager)
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        return new JsonResponse($organizationManager->create($request->request->all(), $this->getUser()), 201);
     }
 }
