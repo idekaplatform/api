@@ -3,6 +3,7 @@
 namespace App\Manager\Project;
 
 use App\Entity\Project\Project;
+use App\Entity\User\User;
 
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -24,5 +25,10 @@ class ProjectManager
     public function get(string $slug)
     {
         return $this->em->getRepository(Project::class)->findOneBySlug($slug);
+    }
+
+    public function getUserProjects(User $user): array
+    {
+        return $this->em->getRepository(Project::class)->getUserProjects($user);
     }
 }

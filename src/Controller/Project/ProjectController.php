@@ -3,6 +3,7 @@
 namespace App\Controller\Project;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Manager\User\UserManager;
 use App\Manager\Project\ProjectManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -27,5 +28,16 @@ class ProjectController extends AbstractController
             throw new NotFoundHttpException('projects.not_found');
         }
         return new JsonResponse($project);
+    }
+
+    /**
+     * @Route("/api/users/{id}/projects", name="get_user_projects", methods={"GET"})
+     */
+    public function getUserProjects(int $id, UserManager $userManager, ProjectManager $projectManager)
+    {
+        if (($user = $userManager->get($id)) === null) {
+            throw new NotFoundHttpException('users.not_found');
+        }
+        return new JsonResponse($projectManager->getUserProjects($user));
     }
 }

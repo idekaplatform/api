@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="App\Repository\Project\ProjectRepository")
  * @ORM\Table(name="project__projects")
  * @ORM\HasLifecycleCallbacks
  */
