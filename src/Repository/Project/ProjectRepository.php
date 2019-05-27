@@ -12,8 +12,8 @@ class ProjectRepository extends EntityRepository
         return $this
             ->createQueryBuilder('p')
             ->select('p')
-            ->join('p.organization', 'o')
-            ->join('o.members', 'm')
+            ->leftJoin('p.organization', 'o')
+            ->leftJoin('o.members', 'm')
             ->where('m.user = :member_user')
             ->orWhere('p.user = :project_user')
             ->setParameters([

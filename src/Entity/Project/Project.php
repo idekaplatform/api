@@ -5,6 +5,7 @@ namespace App\Entity\Project;
 use App\Entity\PublishableInterface;
 use App\Entity\SocialNetwork;
 use App\Entity\Organization\Organization;
+use App\Entity\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -69,6 +70,7 @@ class Project implements \JsonSerializable, PublishableInterface
     public function __construct()
     {
         $this->socialNetworks = new ArrayCollection();
+        $this->isPublished = false;
     }
 
     /**

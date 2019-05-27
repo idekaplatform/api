@@ -8,6 +8,7 @@ use App\Manager\Project\ProjectManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
 
 class ProjectController extends AbstractController
 {
@@ -39,5 +40,13 @@ class ProjectController extends AbstractController
             throw new NotFoundHttpException('users.not_found');
         }
         return new JsonResponse($projectManager->getUserProjects($user));
+    }
+
+    /**
+     * @Route("/api/projects", name="create_project", methods={"POST"})
+     */
+    public function createProject(Request $request, ProjectManager $projectManager)
+    {
+        return new JsonResponse($projectManager->create($request->request->all(), $this->getUser()), 201);
     }
 }
