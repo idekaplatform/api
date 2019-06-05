@@ -50,6 +50,18 @@ class NewsManager
         return $news;
     }
 
+    public function update(News $news, array $data): News
+    {
+        $news
+            ->setTitle($data['title'])
+            ->setSlug($this->slugger->slugify($data['title']))
+            ->setContent($data['content'])
+        ;
+        $this->em->flush();
+
+        return $news;
+    }
+
     public function publish(News $news)
     {
         $news->publish();

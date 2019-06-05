@@ -196,6 +196,7 @@ class News implements \JsonSerializable, PublishableInterface
             'project' => $this->project,
             'author' => $this->author,
             'title' => $this->title,
+            'slug' => $this->slug,
             'content' => $this->content,
             'is_published' => $this->isPublished,
             'published_at' => $this->publishedAt,

@@ -15,7 +15,7 @@ use App\Security\Voter\ProjectVoter;
 class NewsController extends AbstractController
 {
     /**
-     * @Route("/api/projects/{slug}/news", name="get_project_news", methods={"GET"})
+     * @Route("/api/projects/{slug}/news", name="get_all_project_news", methods={"GET"})
      */
     public function getProjectNews(string $slug, ProjectManager $projectManager, NewsManager $newsManager)
     {
@@ -23,6 +23,14 @@ class NewsController extends AbstractController
             throw new NotFoundHttpException('projects.not_found');
         }
         return new JsonResponse($newsManager->getProjectNews($project, $this->getUser()));
+    }
+
+    /**
+     * @Route("/api/projects/{slug}/news/{id}", name="get_project_news", methods={"GET"})
+     */
+    public function getNews(int $id, NewsManager $newsManager)
+    {
+        return new JsonResponse($newsManager->get($id));
     }
 
     /**
@@ -36,6 +44,19 @@ class NewsController extends AbstractController
         $this->denyAccessUnlessGranted(ProjectVoter::NEWS_CREATE, $project);
 
         return new JsonResponse($newsManager->create($request->request->all(), $project, $this->getUser()), 201);
+    }
+
+    /**
+     * @Route("/api/projects/{slug}/news/{id}", name="update_project_news", methods={"PUT"})
+     */
+    public function update(int $id, Request $request, NewsManager $newsManager)
+    {
+        if (($news = $newsManager->get($id)) === null) {
+            throw new NotFoundHttpException('projects.news.not_found');
+        }
+        $this->denyAccessUnlessGranted(ProjectVoter::NEWS_UPDATE, $news);
+
+        return new JsonResponse($newsManager->update($news, $request->request->all()));
     }
 
     /**
