@@ -199,9 +199,9 @@ class News implements \JsonSerializable, PublishableInterface
             'slug' => $this->slug,
             'content' => $this->content,
             'is_published' => $this->isPublished,
-            'published_at' => $this->publishedAt,
-            'created_at' => $this->createdAt,
-            'updated_at' => $this->updatedAt
+            'published_at' => ($this->publishedAt !== null) ? $this->publishedAt->format('c') : null,
+            'created_at' => $this->createdAt->format('c'),
+            'updated_at' => $this->updatedAt->format('c')
         ];
     }
 }
