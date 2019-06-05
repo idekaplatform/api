@@ -173,6 +173,22 @@ class Project implements \JsonSerializable, PublishableInterface
         return $this->organization;
     }
 
+    public function isTeamMember(User $user): bool
+    {
+        if ($this->user === $user) {
+            return true;
+        }
+        if ($this->organization === null) {
+            return false;
+        }
+        foreach ($this->organization->getMembers() as $member) {
+            if ($member->getUser() === $user) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function setWebsiteUrl(string $websiteUrl = null): self
     {
         $this->websiteUrl = $websiteUrl;
