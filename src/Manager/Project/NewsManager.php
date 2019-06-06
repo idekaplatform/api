@@ -32,7 +32,7 @@ class NewsManager
         if ($user === null || !$project->isTeamMember($user)) {
             $criterias['isPublished'] = true;
         }
-        return $this->em->getRepository(News::class)->findBy($criterias);
+        return $this->em->getRepository(News::class)->findBy($criterias, ['updatedAt' => 'DESC']);
     }
 
     public function create(array $data, Project $project, User $user): News
