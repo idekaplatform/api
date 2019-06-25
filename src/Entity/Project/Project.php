@@ -47,6 +47,11 @@ class Project implements \JsonSerializable, PublishableInterface
      */
     protected $organization;
     /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\User\User")
+     * @ORM\JoinTable(name="project__members")
+     */
+    protected $members;
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     protected $websiteUrl;
@@ -70,6 +75,7 @@ class Project implements \JsonSerializable, PublishableInterface
     public function __construct()
     {
         $this->socialNetworks = new ArrayCollection();
+        $this->members = new ArrayCollection();
         $this->isPublished = false;
     }
 
@@ -218,6 +224,30 @@ class Project implements \JsonSerializable, PublishableInterface
     public function getSocialNetworks()
     {
         return $this->socialNetworks;
+    }
+
+    public function addMember(User $user): self
+    {
+        $this->members->add($user);
+
+        return $this;
+    }
+
+    public function hasMember(User $user): bool
+    {
+        return $this->members->contains($user);
+    }
+
+    public function removeUser(User $user): self
+    {
+        $this->members->removeElement($user);
+
+        return $this;
+    }
+
+    public function getMembers()
+    {
+        return $this->members;
     }
 
     public function publish(): PublishableInterface
