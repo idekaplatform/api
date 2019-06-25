@@ -19,9 +19,11 @@ class ProjectVoter extends Voter
     const NEWS_PUBLISH = 'news_publish';
     const NEWS_DELETE = 'news_delete';
 
+    const JOB_OFFER_CREATE = 'job_offer_create';
+
     public function supports($attribute, $subject)
     {
-        if ($subject instanceof Project && in_array($attribute, [ self::PROJECT_UPDATE, self::PROJECT_DELETE, self::NEWS_CREATE ])) {
+        if ($subject instanceof Project && in_array($attribute, [ self::PROJECT_UPDATE, self::PROJECT_DELETE, self::NEWS_CREATE, self::JOB_OFFER_CREATE ])) {
             return true;
         }
         if ($subject instanceof News && in_array($attribute, [ self::NEWS_UPDATE, self::NEWS_PUBLISH, self::NEWS_DELETE ])) {
@@ -43,6 +45,8 @@ class ProjectVoter extends Voter
                 return $this->canUpdateProject($subject, $user);
             case self::PROJECT_DELETE:
                 return $this->canDeleteProject($subject, $user);
+            case self::JOB_OFFER_CREATE:
+                return $this->canCreateJobOffer($subject, $user);
             case self::NEWS_CREATE:
                 return $this->canCreateNews($subject, $user);
             case self::NEWS_UPDATE:
@@ -66,6 +70,11 @@ class ProjectVoter extends Voter
     }
 
     protected function canCreateNews(Project $project, User $user): bool
+    {
+        return $project->isTeamMember($user);
+    }
+
+    protected function canCreateJobOffer(Project $project, User $user): bool
     {
         return $project->isTeamMember($user);
     }
