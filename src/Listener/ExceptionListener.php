@@ -5,6 +5,7 @@ namespace App\Listener;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use App\Exception\ValidationException;
 
 use Psr\Log\LoggerInterface;
 
@@ -22,7 +23,10 @@ class ExceptionListener
     {
         $exception = $event->getException();
 
-        if ($exception instanceof HttpException) {
+        if ($exception instanceof ValidationException) {
+            $event->setResponse(new JsonResponse($exception->getErrors()));
+            return;
+        } elseif ($exception instanceof HttpException) {
             $message = $exception->getMessage();
             $code = $exception->getStatusCode();
         } else {
