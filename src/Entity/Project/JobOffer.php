@@ -4,6 +4,8 @@ namespace App\Entity\Project;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * @ORM\Entity()
@@ -43,6 +45,10 @@ class JobOffer implements \JsonSerializable
      */
     protected $content;
     /**
+     * @ORM\OneToMany(targetEntity="Skill", mappedBy="jobOffer", cascade={"persist", "remove"})
+     */
+    protected $skills;
+    /**
      * @ORM\Column(type="datetime")
      */
     protected $createdAt;
@@ -65,6 +71,11 @@ class JobOffer implements \JsonSerializable
     public function preUpdate()
     {
         $this->updatedAt = new \DateTime();
+    }
+
+    public function __construct()
+    {
+        $this->skills = new ArrayCollection();
     }
 
     public function setTitle(string $title): self
@@ -101,6 +112,30 @@ class JobOffer implements \JsonSerializable
     public function getContent(): string
     {
         return $this->content;
+    }
+
+    public function addSkill(Skill $skill): self
+    {
+        $this->skills->add($skill);
+
+        return $this;
+    }
+
+    public function hasSkill(Skill $skill): bool
+    {
+        return $this->skills->contains($skill);
+    }
+
+    public function removeSkill(Skill $skill): self
+    {
+        $this->skills->removeElement($skill);
+
+        return $this;
+    }
+
+    public function getSkills(): Collection
+    {
+        return $this->skills;
     }
 
     public function setProject(Project $project): self
