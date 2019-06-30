@@ -26,11 +26,13 @@ class Skill
     protected $type;
 
     const TYPE_GRAPHICS = 'graphics';
+    const TYPE_INFRASTRUCTURE = 'infrastructure';
     const TYPE_MANAGEMENT = 'management';
     const TYPE_PROGRAMMING = 'programming';
 
     const TYPES = [
         self::TYPE_GRAPHICS,
+        self::TYPE_INFRASTRUCTURE,
         self::TYPE_MANAGEMENT,
         self::TYPE_PROGRAMMING
     ];
