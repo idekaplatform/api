@@ -27,6 +27,7 @@ class SkillFixtures extends Fixture
         yield (new Skill())->setName('product_design')->setType(Skill::TYPE_MANAGEMENT);
         yield (new Skill())->setName('product_management')->setType(Skill::TYPE_MANAGEMENT);
         // Programming
+        yield (new Skill())->setName('git')->setType(Skill::TYPE_PROGRAMMING);
         yield (new Skill())->setName('php')->setType(Skill::TYPE_PROGRAMMING);
         yield (new Skill())->setName('symfony')->setType(Skill::TYPE_PROGRAMMING);
         yield (new Skill())->setName('laravel')->setType(Skill::TYPE_PROGRAMMING);
