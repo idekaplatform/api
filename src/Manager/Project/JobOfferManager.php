@@ -8,6 +8,9 @@ use App\Entity\Project\Project;
 use App\Entity\Project\JobOffer;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Exception\ValidationException;
+use App\Entity\Skill;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use App\Entity\Project\Skill as AppSkill;
 
 class JobOfferManager
 {
@@ -46,5 +49,32 @@ class JobOfferManager
         $this->em->flush();
 
         return $jobOffer;
+    }
+
+    public function addSkill(JobOffer $jobOffer, Skill $skill, int $level)
+    {
+        $jobSkill =
+            (new JobSkill())
+            ->setJobOffer($jobOffer)
+            ->setSkill($skill)
+            ->setLevel($level)
+        ;
+        $this->em->persist($jobSkill);
+        $this->em->flush();
+
+        return $jobSkill;
+    }
+
+    public function removeSkill(JobOffer $jobOffer, Skill $skill)
+    {
+        foreach ($jobOffer->getSkills() as $jobSkill) {
+            if ($jobSkill->getSkill() === $skill) {
+                $jobOffer->removeSkill($jobSkill);
+                $this->em->remove($jobSkill);
+                $this->em->flush();
+                return;
+            }
+        }
+        throw new NotFoundHttpException('projects.job_offers.skills.not_found');
     }
 }
