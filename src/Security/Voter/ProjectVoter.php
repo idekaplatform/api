@@ -8,6 +8,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use App\Entity\Project\Project;
 use App\Entity\Project\News;
 use App\Entity\User\User;
+use App\Entity\Project\JobOffer;
 
 class ProjectVoter extends Voter
 {
@@ -20,6 +21,9 @@ class ProjectVoter extends Voter
     const NEWS_DELETE = 'news_delete';
 
     const JOB_OFFER_CREATE = 'job_offer_create';
+    const JOB_OFFER_ADD_SKILL = 'job_offer_add_skill';
+    const JOB_OFFER_REMOVE_SKILL = 'job_offer_remove_skill';
+    const JOB_OFFER_UPDATE_SKILL = 'job_offer_update_skill';
 
     public function supports($attribute, $subject)
     {
@@ -27,6 +31,9 @@ class ProjectVoter extends Voter
             return true;
         }
         if ($subject instanceof News && in_array($attribute, [ self::NEWS_UPDATE, self::NEWS_PUBLISH, self::NEWS_DELETE ])) {
+            return true;
+        }
+        if ($subject instanceof JobOffer && in_array($attribute, [ self::JOB_OFFER_ADD_SKILL, self::JOB_OFFER_REMOVE_SKILL, self::JOB_OFFER_UPDATE_SKILL ])) {
             return true;
         }
         return false;
@@ -47,6 +54,12 @@ class ProjectVoter extends Voter
                 return $this->canDeleteProject($subject, $user);
             case self::JOB_OFFER_CREATE:
                 return $this->canCreateJobOffer($subject, $user);
+            case self::JOB_OFFER_ADD_SKILL:
+                return $this->canAddSkill($subject, $user);
+            case self::JOB_OFFER_REMOVE_SKILL:
+                return $this->canRemoveSkill($subject, $user);
+            case self::JOB_OFFER_UPDATE_SKILL:
+                return $this->canUpdateSkill($subject, $user);
             case self::NEWS_CREATE:
                 return $this->canCreateNews($subject, $user);
             case self::NEWS_UPDATE:
@@ -77,6 +90,21 @@ class ProjectVoter extends Voter
     protected function canCreateJobOffer(Project $project, User $user): bool
     {
         return $project->isTeamMember($user);
+    }
+
+    protected function canAddSkill(JobOffer $jobOffer, User $user): bool
+    {
+        return $jobOffer->getProject()->isTeamMember($user);
+    }
+
+    protected function canRemoveSkill(JobOffer $jobOffer, User $user): bool
+    {
+        return $jobOffer->getProject()->isTeamMember($user);
+    }
+
+    protected function canUpdateSkill(JobOffer $jobOffer, User $user): bool
+    {
+        return $jobOffer->getProject()->isTeamMember($user);
     }
 
     protected function canUpdateNews(News $news, User $user): bool

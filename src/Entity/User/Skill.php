@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="user__skills")
  * @ORM\HasLifecycleCallbacks
  */
-class Skill
+class Skill implements \JsonSerializable
 {
     /**
      * @ORM\Id
@@ -109,5 +109,15 @@ class Skill
     public function getUpdatedAt(): \DateTime
     {
         return $this->updatedAt;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'skill' => $this->skill,
+            'self_evaluation' => $this->selfEvaluation,
+            'created_at' => $this->createdAt->format('c'),
+            'updated_at' => $this->updatedAt->format('c')
+        ];
     }
 }

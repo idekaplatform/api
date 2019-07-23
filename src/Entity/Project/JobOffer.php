@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use App\Entity\Skill as BaseSkill;
 
 /**
  * @ORM\Entity()
@@ -45,7 +46,7 @@ class JobOffer implements \JsonSerializable
      */
     protected $content;
     /**
-     * @ORM\OneToMany(targetEntity="Skill", mappedBy="jobOffer", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Skill", mappedBy="jobOffer", cascade={"persist", "remove"}, fetch="EAGER")
      */
     protected $skills;
     /**
@@ -133,6 +134,16 @@ class JobOffer implements \JsonSerializable
         return $this;
     }
 
+    public function findSkill(BaseSkill $skill): ?Skill
+    {
+        foreach ($this->skills as $jobOfferSkill) {
+            if ($jobOfferSkill->getSkill() === $skill) {
+                return $jobOfferSkill;
+            }
+        }
+        return null;
+    }
+
     public function getSkills(): Collection
     {
         return $this->skills;
@@ -182,8 +193,9 @@ class JobOffer implements \JsonSerializable
             'slug' => $this->slug,
             'content' => $this->content,
             'project' => $this->project,
-            'created_at' => $this->createdAt,
-            'updated_at' => $this->updatedAt
+            'skills' => $this->skills->toArray(),
+            'created_at' => $this->createdAt->format('c'),
+            'updated_at' => $this->updatedAt->format('c')
         ];
     }
 }

@@ -70,4 +70,20 @@ class JobOfferController extends AbstractController
         $jobOfferManager->removeSkill($jobOffer, $skill);
         return new Response('', 204);
     }
+
+    /**
+     * @Route("/api/projects/{slug}/job-offers/{id}/skills/{skillId}", name="update_project_job_offer_skill_level", methods={"PATCH"})
+     */
+    public function updateJobOfferSkillLevel(Request $request, string $slug, int $id, int $skillId, JobOfferManager $jobOfferManager, SkillManager $skillManager)
+    {
+        if (($jobOffer = $jobOfferManager->get($id)) === null) {
+            throw new NotFoundHttpException('projects.job_offers.not_found');
+        }
+        $this->denyAccessUnlessGranted(ProjectVoter::JOB_OFFER_UPDATE_SKILL, $jobOffer);
+        if (($skill = $skillManager->get($skillId)) === null) {
+            throw new NotFoundHttpException('skills.not_found');
+        }
+        $jobOfferManager->updateSkillLevel($jobOffer, $skill, $request->request->get('level'));
+        return new Response('', 204);
+    }
 }

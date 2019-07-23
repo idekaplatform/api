@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity()
  * @ORM\Table(name="skills")
  */
-class Skill
+class Skill implements \JsonSerializable
 {
     /**
      * @ORM\Id
@@ -74,5 +74,14 @@ class Skill
     public function getType(): string
     {
         return $this->type;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'type' => $this->type
+        ];
     }
 }

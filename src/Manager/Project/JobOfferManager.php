@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Exception\ValidationException;
 use App\Entity\Skill;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use App\Entity\Project\Skill as AppSkill;
+use App\Entity\Project\Skill as JobSkill;
 
 class JobOfferManager
 {
@@ -28,12 +28,17 @@ class JobOfferManager
         $this->slugger = $slugger;
     }
 
-    public function getProjectJobOffers(Project $project)
+    public function get(int $id): ?JobOffer
+    {
+        return $this->em->getRepository(JobOffer::class)->find($id);
+    }
+
+    public function getProjectJobOffers(Project $project): array
     {
         return $this->em->getRepository(JobOffer::class)->findByProject($project);
     }
 
-    public function create(Project $project, array $data)
+    public function create(Project $project, array $data): JobOffer
     {
         $jobOffer =
             (new JobOffer())
@@ -67,14 +72,20 @@ class JobOfferManager
 
     public function removeSkill(JobOffer $jobOffer, Skill $skill)
     {
-        foreach ($jobOffer->getSkills() as $jobSkill) {
-            if ($jobSkill->getSkill() === $skill) {
-                $jobOffer->removeSkill($jobSkill);
-                $this->em->remove($jobSkill);
-                $this->em->flush();
-                return;
-            }
+        if (($jobOfferSkill = $jobOffer->findSkill($skill)) === null) {
+            throw new NotFoundHttpException('projects.job_offers.skills.not_found');
         }
-        throw new NotFoundHttpException('projects.job_offers.skills.not_found');
+        $jobOffer->removeSkill($jobOfferSkill);
+        $this->em->remove($jobOfferSkill);
+        $this->em->flush();
+    }
+
+    public function updateSkillLevel(JobOffer $jobOffer, Skill $skill, int $level)
+    {
+        if (($jobOfferSkill = $jobOffer->findSkill($skill)) === null) {
+            throw new NotFoundHttpException('projects.job_offers.skills.not_found');
+        }
+        $jobOfferSkill->setLevel($level);
+        $this->em->flush();
     }
 }

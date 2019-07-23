@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity()
  * @ORM\Table(name="project__skills")
  */
-class Skill
+class Skill implements \JsonSerializable
 {
     /**
      * @ORM\Id
@@ -55,5 +55,18 @@ class Skill
         $this->level = $level;
 
         return $this;
+    }
+
+    public function getLevel(): int
+    {
+        return $this->level;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'skill' => $this->skill,
+            'level' => $this->level,
+        ];
     }
 }
