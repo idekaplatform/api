@@ -47,8 +47,7 @@ class Project implements \JsonSerializable, PublishableInterface
      */
     protected $organization;
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\User\User")
-     * @ORM\JoinTable(name="project__members")
+     * @ORM\OneToMany(targetEntity="App\Entity\Project\Member", mappedBy="project")
      */
     protected $members;
     /**
@@ -303,6 +302,7 @@ class Project implements \JsonSerializable, PublishableInterface
             'description' => $this->description,
             'user' => $this->user,
             'organization' => $this->organization,
+            'members' => $this->members->toArray(),
             'website_url' => $this->websiteUrl,
             'social_networks' => $this->socialNetworks->toArray(),
             'is_published' => $this->isPublished,
