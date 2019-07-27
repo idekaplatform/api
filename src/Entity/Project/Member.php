@@ -12,7 +12,7 @@ use Doctrine\Common\Collections\Collection;
  * @ORM\Table(name="project__members")
  * @ORM\HasLifecycleCallbacks
  */
-class Member
+class Member implements \JsonSerializable
 {
     /**
      * @ORM\Id
@@ -49,6 +49,18 @@ class Member
     public function prePersist()
     {
         $this->joinedAt = new \DateTime();
+    }
+
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 
     public function setProject(Project $project): self
@@ -110,5 +122,15 @@ class Member
     public function getJoinedAt(): \DateTime
     {
         return $this->joinedAt;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->id,
+            'user' => $this->user,
+            'teams' => $this->teams,
+            'joined_at' => $this->joinedAt->format('c')
+        ];
     }
 }
