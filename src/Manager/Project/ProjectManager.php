@@ -15,14 +15,17 @@ class ProjectManager
 {
     /** @var EntityManagerInterface */
     protected $em;
+    /** @var MemberManager */
+    protected $memberManager;
     /** @var OrganizationManager */
     protected $organizationManager;
     /** @var Slugger */
     protected $slugger;
 
-    public function __construct(EntityManagerInterface $em, OrganizationManager $organizationManager, Slugger $slugger)
+    public function __construct(EntityManagerInterface $em, MemberManager $memberManager, OrganizationManager $organizationManager, Slugger $slugger)
     {
         $this->em = $em;
+        $this->memberManager = $memberManager;
         $this->organizationManager = $organizationManager;
         $this->slugger = $slugger;
     }
@@ -51,6 +54,8 @@ class ProjectManager
             ->setShortDescription($data['short_description'])
             ->setDescription($data['description'])
         ;
+        $project->addMember($this->memberManager->create($project, $user));
+
         if ($this->get($project->getSlug()) !== null) {
             throw new BadRequestHttpException('projects.name_already_taken');
         }
@@ -60,7 +65,7 @@ class ProjectManager
             }
             $project->setOrganization($organization);
         } else {
-            $project->setUser($user);
+            $project->setFounder($user);
         }
 
         $this->em->persist($project);

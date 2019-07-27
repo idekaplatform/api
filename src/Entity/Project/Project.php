@@ -225,21 +225,21 @@ class Project implements \JsonSerializable, PublishableInterface
         return $this->socialNetworks;
     }
 
-    public function addMember(User $user): self
+    public function addMember(Member $member): self
     {
-        $this->members->add($user);
+        $this->members->add($member);
 
         return $this;
     }
 
-    public function hasMember(User $user): bool
+    public function hasMember(Member $member): bool
     {
-        return $this->members->contains($user);
+        return $this->members->contains($member);
     }
 
-    public function removeUser(User $user): self
+    public function removeMember(Member $member): self
     {
-        $this->members->removeElement($user);
+        $this->members->removeElement($member);
 
         return $this;
     }
