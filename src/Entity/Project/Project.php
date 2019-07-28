@@ -47,6 +47,10 @@ class Project implements \JsonSerializable, PublishableInterface
      */
     protected $organization;
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Project\Member", mappedBy="project")
+     */
+    protected $members;
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     protected $websiteUrl;
@@ -70,6 +74,7 @@ class Project implements \JsonSerializable, PublishableInterface
     public function __construct()
     {
         $this->socialNetworks = new ArrayCollection();
+        $this->members = new ArrayCollection();
         $this->isPublished = false;
     }
 
@@ -220,6 +225,30 @@ class Project implements \JsonSerializable, PublishableInterface
         return $this->socialNetworks;
     }
 
+    public function addMember(Member $member): self
+    {
+        $this->members->add($member);
+
+        return $this;
+    }
+
+    public function hasMember(Member $member): bool
+    {
+        return $this->members->contains($member);
+    }
+
+    public function removeMember(Member $member): self
+    {
+        $this->members->removeElement($member);
+
+        return $this;
+    }
+
+    public function getMembers()
+    {
+        return $this->members;
+    }
+
     public function publish(): PublishableInterface
     {
         $this->isPublished = true;
@@ -273,6 +302,7 @@ class Project implements \JsonSerializable, PublishableInterface
             'description' => $this->description,
             'user' => $this->user,
             'organization' => $this->organization,
+            'members' => $this->members->toArray(),
             'website_url' => $this->websiteUrl,
             'social_networks' => $this->socialNetworks->toArray(),
             'is_published' => $this->isPublished,

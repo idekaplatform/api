@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Security\Voter;
+namespace App\Security\Voter\Project;
 
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -9,22 +9,19 @@ use App\Entity\Project\Project;
 use App\Entity\Project\News;
 use App\Entity\User\User;
 
-class ProjectVoter extends Voter
+class NewsVoter extends Voter
 {
-    const PROJECT_UPDATE = 'update';
-    const PROJECT_DELETE = 'delete';
-
-    const NEWS_CREATE = 'news_create';
-    const NEWS_UPDATE = 'news_update';
-    const NEWS_PUBLISH = 'news_publish';
-    const NEWS_DELETE = 'news_delete';
+    const CREATE = 'news_create';
+    const UPDATE = 'news_update';
+    const PUBLISH = 'news_publish';
+    const DELETE = 'news_delete';
 
     public function supports($attribute, $subject)
     {
-        if ($subject instanceof Project && in_array($attribute, [ self::PROJECT_UPDATE, self::PROJECT_DELETE, self::NEWS_CREATE ])) {
+        if ($subject instanceof Project && in_array($attribute, [ self::CREATE ])) {
             return true;
         }
-        if ($subject instanceof News && in_array($attribute, [ self::NEWS_UPDATE, self::NEWS_PUBLISH, self::NEWS_DELETE ])) {
+        if ($subject instanceof News && in_array($attribute, [ self::UPDATE, self::PUBLISH, self::DELETE ])) {
             return true;
         }
         return false;
@@ -39,10 +36,6 @@ class ProjectVoter extends Voter
         }
 
         switch ($attribute) {
-            case self::PROJECT_UPDATE:
-                return $this->canUpdateProject($subject, $user);
-            case self::PROJECT_DELETE:
-                return $this->canDeleteProject($subject, $user);
             case self::NEWS_CREATE:
                 return $this->canCreateNews($subject, $user);
             case self::NEWS_UPDATE:
@@ -53,16 +46,6 @@ class ProjectVoter extends Voter
                 return $this->canDeleteNews($subject, $user);
         }
         throw new \LogicException('This code should not be reached');
-    }
-
-    protected function canUpdateProject(Project $project, User $user): bool
-    {
-        return $project->isTeamMember($user);
-    }
-
-    protected function canDeleteProject(Project $project, User $user): bool
-    {
-        return $project->isTeamMember($user);
     }
 
     protected function canCreateNews(Project $project, User $user): bool

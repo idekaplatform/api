@@ -16,7 +16,7 @@ class ProjectFixtures extends Fixture implements DependentFixtureInterface
         foreach ($this->getProjects() as $project) {
             $project->publish();
             $om->persist($project);
-            $this->addReference("project-{$project->getId()}", $project);
+            $this->addReference("project-{$project->getSlug()}", $project);
         }
         $om->flush();
     }
@@ -32,7 +32,6 @@ class ProjectFixtures extends Fixture implements DependentFixtureInterface
     {
         $project = new Project();
         yield $project
-            ->setId(1)
             ->setName('Ideka')
             ->setSlug('ideka')
             ->setShortDescription('Une plateforme pour les développer tous')
