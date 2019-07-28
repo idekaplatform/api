@@ -11,8 +11,9 @@ use App\Manager\Project\ProjectManager;
 use App\Manager\Project\JobOfferManager;
 use App\Manager\SkillManager;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use App\Security\Voter\ProjectVoter;
+use App\Security\Voter\Project\JobOfferVoter;
 use Symfony\Component\HttpFoundation\Response;
+use App\Security\Voter\Project\CandidatureVoter;
 
 class JobOfferController extends AbstractController
 {
@@ -24,7 +25,7 @@ class JobOfferController extends AbstractController
         if (($project = $projectManager->get($slug)) === null) {
             throw new NotFoundHttpException('projects.not_found');
         }
-        $this->denyAccessUnlessGranted(ProjectVoter::JOB_OFFER_CREATE, $project);
+        $this->denyAccessUnlessGranted(JobOfferVoter::CREATE, $project);
 
         return new JsonResponse($jobOfferManager->create($project, $request->request->all()), 201);
     }
@@ -48,7 +49,7 @@ class JobOfferController extends AbstractController
         if (($jobOffer = $jobOfferManager->get($request->attributes->get('id'))) === null) {
             throw new NotFoundHttpException('projects.job_offers.not_found');
         }
-        $this->denyAccessUnlessGranted(ProjectVoter::JOB_OFFER_ADD_SKILL, $jobOffer);
+        $this->denyAccessUnlessGranted(JobOfferVoter::ADD_SKILL, $jobOffer);
         if (($skill = $skillManager->get($request->request->get('skill_id'))) === null) {
             throw new NotFoundHttpException('skills.not_found');
         }
@@ -63,7 +64,7 @@ class JobOfferController extends AbstractController
         if (($jobOffer = $jobOfferManager->get($request->attributes->get('id'))) === null) {
             throw new NotFoundHttpException('projects.job_offers.not_found');
         }
-        $this->denyAccessUnlessGranted(ProjectVoter::JOB_OFFER_REMOVE_SKILL, $jobOffer);
+        $this->denyAccessUnlessGranted(JobOfferVoter::REMOVE_SKILL, $jobOffer);
         if (($skill = $skillManager->get($request->attributes->get('skill_id'))) === null) {
             throw new NotFoundHttpException('skills.not_found');
         }
@@ -79,7 +80,7 @@ class JobOfferController extends AbstractController
         if (($jobOffer = $jobOfferManager->get($id)) === null) {
             throw new NotFoundHttpException('projects.job_offers.not_found');
         }
-        $this->denyAccessUnlessGranted(ProjectVoter::JOB_OFFER_UPDATE_SKILL, $jobOffer);
+        $this->denyAccessUnlessGranted(JobOfferVoter::UPDATE_SKILL, $jobOffer);
         if (($skill = $skillManager->get($skillId)) === null) {
             throw new NotFoundHttpException('skills.not_found');
         }

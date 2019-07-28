@@ -10,7 +10,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use App\Security\Voter\ProjectVoter;
+use App\Security\Voter\Project\NewsVoter;
 
 class NewsController extends AbstractController
 {
@@ -41,7 +41,7 @@ class NewsController extends AbstractController
         if (($project = $projectManager->get($request->attributes->get('slug'))) === null) {
             throw new NotFoundHttpException('projects.not_found');
         }
-        $this->denyAccessUnlessGranted(ProjectVoter::NEWS_CREATE, $project);
+        $this->denyAccessUnlessGranted(NewsVoter::CREATE, $project);
 
         return new JsonResponse($newsManager->create($request->request->all(), $project, $this->getUser()), 201);
     }
@@ -54,7 +54,7 @@ class NewsController extends AbstractController
         if (($news = $newsManager->get($id)) === null) {
             throw new NotFoundHttpException('projects.news.not_found');
         }
-        $this->denyAccessUnlessGranted(ProjectVoter::NEWS_UPDATE, $news);
+        $this->denyAccessUnlessGranted(NewsVoter::UPDATE, $news);
 
         return new JsonResponse($newsManager->update($news, $request->request->all()));
     }
@@ -67,7 +67,7 @@ class NewsController extends AbstractController
         if (($news = $newsManager->get($id)) === null) {
             throw new NotFoundHttpException('news.not_found');
         }
-        $this->denyAccessUnlessGranted(ProjectVoter::NEWS_PUBLISH, $news);
+        $this->denyAccessUnlessGranted(NewsVoter::PUBLISH, $news);
 
         $newsManager->publish($news);
 
@@ -82,7 +82,7 @@ class NewsController extends AbstractController
         if (($news = $newsManager->get($id)) === null) {
             throw new NotFoundHttpException('news.not_found');
         }
-        $this->denyAccessUnlessGranted(ProjectVoter::NEWS_PUBLISH, $news);
+        $this->denyAccessUnlessGranted(NewsVoter::PUBLISH, $news);
 
         $newsManager->unpublish($news);
 

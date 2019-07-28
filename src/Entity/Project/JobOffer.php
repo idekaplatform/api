@@ -46,6 +46,10 @@ class JobOffer implements \JsonSerializable
      */
     protected $content;
     /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $isActive;
+    /**
      * @ORM\OneToMany(targetEntity="Skill", mappedBy="jobOffer", cascade={"persist", "remove"}, fetch="EAGER")
      */
     protected $skills;
@@ -63,6 +67,7 @@ class JobOffer implements \JsonSerializable
      */
     public function prePersist()
     {
+        $this->isActive = true;
         $this->createdAt = $this->updatedAt = new \DateTime();
     }
 
@@ -113,6 +118,18 @@ class JobOffer implements \JsonSerializable
     public function getContent(): string
     {
         return $this->content;
+    }
+
+    public function activate(bool $isActive): self
+    {
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->isActive;
     }
 
     public function addSkill(Skill $skill): self
