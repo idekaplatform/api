@@ -209,6 +209,7 @@ class JobOffer implements \JsonSerializable
             'title' => $this->title,
             'slug' => $this->slug,
             'content' => $this->content,
+            'is_active' => $this->isActive,
             'project' => $this->project,
             'skills' => $this->skills->toArray(),
             'created_at' => $this->createdAt->format('c'),

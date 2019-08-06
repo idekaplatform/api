@@ -36,13 +36,13 @@ class NewsVoter extends Voter
         }
 
         switch ($attribute) {
-            case self::NEWS_CREATE:
+            case self::CREATE:
                 return $this->canCreateNews($subject, $user);
-            case self::NEWS_UPDATE:
+            case self::UPDATE:
                 return $this->canUpdateNews($subject, $user);
-            case self::NEWS_PUBLISH:
+            case self::PUBLISH:
                 return $this->canPublishNews($subject, $user);
-            case self::NEWS_DELETE:
+            case self::DELETE:
                 return $this->canDeleteNews($subject, $user);
         }
         throw new \LogicException('This code should not be reached');

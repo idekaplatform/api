@@ -42,6 +42,17 @@ class JobOfferController extends AbstractController
     }
 
     /**
+     * @Route("/api/projects/{slug}/job-offers/{id}", name="get_project_job_offer", methods={"GET"})
+     */
+    public function getProjectJobOffer(string $slug, int $id, JobOfferManager $jobOfferManager)
+    {
+        if (($jobOffer = $jobOfferManager->get($id)) === null) {
+            throw new NotFoundHttpException('projects.job_offers.not_found');
+        }
+        return new JsonResponse($jobOffer);
+    }
+
+    /**
      * @Route("/api/projects/{slug}/job-offers/{id}/skills", name="add_project_job_offer_skill", methods={"POST"})
      */
     public function addJobOfferSkill(Request $request, JobOfferManager $jobOfferManager, SkillManager $skillManager)
