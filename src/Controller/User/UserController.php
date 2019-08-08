@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use App\Manager\User\UserManager;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UserController extends AbstractController
 {
@@ -33,5 +34,16 @@ class UserController extends AbstractController
             $request->request->get('password')
         );
         return $authenticationSuccessHandler->handleAuthenticationSuccess($user, $jwtManager->create($user));
+    }
+
+    /**
+     * @Route("/api/users/{username}", name="get_user_profile", methods={"GET"})
+     */
+    public function getUserProfile(string $username, UserManager $userManager)
+    {
+        if (($user = $userManager->getByUsername($username)) === null) {
+            throw new NotFoundHttpException('users.not_found');
+        }
+        return new JsonResponse($user);
     }
 }
