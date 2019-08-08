@@ -10,6 +10,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use App\Utils\Slugger;
 use App\Manager\Organization\OrganizationManager;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use App\Entity\Organization\Organization;
 
 class ProjectManager
 {
@@ -43,6 +44,11 @@ class ProjectManager
     public function getUserProjects(User $user): array
     {
         return $this->em->getRepository(Project::class)->getUserProjects($user);
+    }
+
+    public function getOrganizationProjects(Organization $organization): array
+    {
+        return $this->em->getRepository(Project::class)->findByOrganization($organization);
     }
 
     public function create(array $data, User $user): Project

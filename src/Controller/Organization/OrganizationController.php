@@ -9,6 +9,7 @@ use App\Manager\User\UserManager;
 use App\Manager\Organization\OrganizationManager;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Request;
+use App\Manager\Project\ProjectManager;
 
 class OrganizationController extends AbstractController
 {
@@ -42,5 +43,16 @@ class OrganizationController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_USER');
 
         return new JsonResponse($organizationManager->create($request->request->all(), $this->getUser()), 201);
+    }
+
+    /**
+     * @Route("/api/organizations/{slug}/projects", name="get_organization_projects", methods={"GET"})
+     */
+    public function getOrganizationProjects(string $slug, OrganizationManager $organizationManager, ProjectManager $projectManager)
+    {
+        if (($organization = $organizationManager->get($slug)) === null) {
+            throw new NotFoundHttpException('organization.not_found');
+        }
+        return new JsonResponse($projectManager->getOrganizationProjects($organization));
     }
 }
