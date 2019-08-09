@@ -79,4 +79,29 @@ class ProjectManager
 
         return $project;
     }
+
+    public function update(Project $project, array $data)
+    {
+        $slug = $this->slugger->slugify($data['name']);
+        if ($slug !== $project->getSlug() && $this->get($slug) !== null) {
+            throw new BadRequestHttpException('projects.name_already_taken');
+        }
+        $project
+            ->setName($data['name'])
+            ->setSlug($slug)
+            ->setWebsiteUrl($data['website_url'])
+            ->setShortDescription($data['short_description'])
+            ->setDescription($data['description'])
+        ;
+        if (!empty($data['organization_slug'])) {
+            if (($organization = $this->organizationManager->get($data['organization_slug'])) === null) {
+                throw new NotFoundHttpException('organizations.not_found');
+            }
+            $project->setOrganization($organization);
+        } else {
+            $project->setOrganization(null);
+        }
+
+        $this->em->flush();
+    }
 }

@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use App\Security\Voter\Project\ProjectVoter;
 
 class ProjectController extends AbstractController
 {
@@ -50,5 +51,18 @@ class ProjectController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_USER');
 
         return new JsonResponse($projectManager->create($request->request->all(), $this->getUser()), 201);
+    }
+
+    /**
+     * @Route("/api/projects/{slug}", name="update_project", methods={"PUT"})
+     */
+    public function updateProject(string $slug, Request $request, ProjectManager $projectManager)
+    {
+        if (($project = $projectManager->get($slug)) === null) {
+            throw new NotFoundHttpException('project.not_found');
+        }
+        $this->denyAccessUnlessGranted(ProjectVoter::UPDATE, $project);
+        $projectManager->update($project, $request->request->all());
+        return new JsonResponse($project);
     }
 }

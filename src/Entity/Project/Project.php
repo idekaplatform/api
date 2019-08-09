@@ -166,14 +166,14 @@ class Project implements \JsonSerializable, PublishableInterface
         return $this->user;
     }
 
-    public function setOrganization(Organization $organization): self
+    public function setOrganization(Organization $organization = null): self
     {
         $this->organization = $organization;
 
         return $this;
     }
 
-    public function getOrganization(): Organization
+    public function getOrganization(): ?Organization
     {
         return $this->organization;
     }
