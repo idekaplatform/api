@@ -60,8 +60,6 @@ class ProjectManager
             ->setShortDescription($data['short_description'])
             ->setDescription($data['description'])
         ;
-        $project->addMember($this->memberManager->create($project, $user));
-
         if ($this->get($project->getSlug()) !== null) {
             throw new BadRequestHttpException('projects.name_already_taken');
         }
@@ -71,11 +69,13 @@ class ProjectManager
             }
             $project->setOrganization($organization);
         } else {
-            $project->setFounder($user);
+            $project->setUser($user);
         }
 
         $this->em->persist($project);
         $this->em->flush();
+
+        $project->addMember($this->memberManager->create($project, $user));
 
         return $project;
     }
