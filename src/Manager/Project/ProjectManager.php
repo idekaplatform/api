@@ -61,11 +61,11 @@ class ProjectManager
             ->setDescription($data['description'])
         ;
         if ($this->get($project->getSlug()) !== null) {
-            throw new BadRequestHttpException('projects.name_already_taken');
+            throw new BadRequestHttpException('project.name_already_taken');
         }
         if (!empty($data['organization_slug'])) {
             if (($organization = $this->organizationManager->get($data['organization_slug'])) === null) {
-                throw new NotFoundHttpException('organizations.not_found');
+                throw new NotFoundHttpException('organization.not_found');
             }
             $project->setOrganization($organization);
         } else {
@@ -84,7 +84,7 @@ class ProjectManager
     {
         $slug = $this->slugger->slugify($data['name']);
         if ($slug !== $project->getSlug() && $this->get($slug) !== null) {
-            throw new BadRequestHttpException('projects.name_already_taken');
+            throw new BadRequestHttpException('project.name_already_taken');
         }
         $project
             ->setName($data['name'])
@@ -95,7 +95,7 @@ class ProjectManager
         ;
         if (!empty($data['organization_slug'])) {
             if (($organization = $this->organizationManager->get($data['organization_slug'])) === null) {
-                throw new NotFoundHttpException('organizations.not_found');
+                throw new NotFoundHttpException('organization.not_found');
             }
             $project->setOrganization($organization);
         } else {
