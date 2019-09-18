@@ -34,6 +34,14 @@ class NewsController extends AbstractController
     }
 
     /**
+     * @Route("/api/news/last", name="get_last_news", methods={"GET"})
+     */
+    public function getLastNews(NewsManager $newsManager)
+    {
+        return new JsonResponse($newsManager->getLastNews());
+    }
+
+    /**
      * @Route("/api/projects/{slug}/news", name="create_project_news", methods={"POST"})
      */
     public function create(Request $request, ProjectManager $projectManager, NewsManager $newsManager)
