@@ -26,6 +26,13 @@ class NewsManager
         return $this->em->getRepository(News::class)->find($id);
     }
 
+    public function getLastNews(): array
+    {
+        return $this->em->getRepository(News::class)->findBy([
+            'isPublished' => true
+        ], ['createdAt' => 'DESC'], 3);
+    }
+
     public function getProjectNews(Project $project, User $user = null): array
     {
         $criterias = [ 'project' => $project ];
