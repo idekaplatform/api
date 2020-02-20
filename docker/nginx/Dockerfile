@@ -1,5 +1,6 @@
 FROM nginx:latest
 
+COPY config/security.conf /etc/nginx/security.conf
 COPY config/nginx.conf /etc/nginx/nginx.conf
 COPY config/sites-available/* /etc/nginx/sites-available/
 COPY docker-entrypoint.sh /entrypoint.sh
